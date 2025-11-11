@@ -864,6 +864,7 @@ function SellCarForm() {
                       {photos.map((p, i) => (
                         <div className="thumb" key={i}>
                           <Image
+                            unoptimized
                             src={p.url}
                             alt={`photo-${i}`}
                             width={1200}
@@ -1249,5 +1250,13 @@ function AIOverlay({
         }
       `}</style>
     </motion.div>
+  );
+}
+
+export default function Page() {
+  return (
+    <main style={{ padding: 24, maxWidth: 1200, margin: "0 auto" }}>
+      <SellCarForm />
+    </main>
   );
 }
