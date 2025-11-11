@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";           // ← behövs för <Image> i tumnaglarna
+import NextImage from "next/image";          // ← behövs för <Image> i tumnaglarna
 import { motion } from "framer-motion";   // ← används i form/overlay
 
 type Photo = { file: File; url: string };
@@ -161,7 +161,11 @@ function SellCarForm() {
   const AI_LOGO_URL = "https://i.imgur.com/YzTHlkx.png";
   function preloadImage(src: string) {
     return new Promise<void>((resolve) => {
-      const img = new Image();
+      if (typeof window === "undefined" || !("Image" in window)) {
+        resolve(); // SSR/preview env: just skip
+        return;
+      }
+      const img = new window.Image();
       img.onload = () => resolve();
       img.onerror = () => resolve(); // fail safe
       img.src = src;
@@ -863,7 +867,7 @@ function SellCarForm() {
                     <div className="thumbs">
                       {photos.map((p, i) => (
                         <div className="thumb" key={i}>
-                          <Image
+                          <NextImage
                             unoptimized
                             src={p.url}
                             alt={`photo-${i}`}
