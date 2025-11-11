@@ -170,9 +170,7 @@ export async function POST(req: Request) {
     }
 
     // Hämta dataset-items från körningen
-    const itemsUrl =
-      `https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}/dataset/items` +
-      `?token=${encodeURIComponent(APIFY_TOKEN)}&format=json`;
+    const itemsUrl = `https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}/dataset/items?token=${encodeURIComponent(APIFY_TOKEN)}&format=json`;
     const itemsRes = await fetch(itemsUrl, { headers: { accept: 'application/json' } });
     const itemsText = await itemsRes.text();
     let items: any[] = [];
