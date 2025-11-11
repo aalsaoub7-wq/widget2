@@ -3,6 +3,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import NextImage from "next/image";          // ← behövs för <Image> i tumnaglarna
 import { motion } from "framer-motion";   // ← används i form/overlay
 
@@ -23,6 +24,7 @@ type LeadPayload = {
   message?: string;
   car?: string;
   source?: string;
+  embedReferrer?: string; // <— NYTT
   hp?: string; // honeypot
 };
 
@@ -532,8 +534,9 @@ function SellCarForm() {
           phone: form.contactPhone,
           car: `${form.brand} ${form.model} ${form.year} (${plateForPreview(form.reg)})`,
           source: "sell-form",
+          embedReferrer: typeof document !== "undefined" ? document.referrer : "",
           message: lines,
-          hp: "", // lämna tom
+          hp: "",
         });
 
         if (!leadRes.ok) {
@@ -1262,8 +1265,40 @@ function AIOverlay({
 }
 
 export default function Page() {
+  const params = useSearchParams();
+  const embedded = params.get("embed") === "1";
+
+  // Auto-resize: skicka höjd till parent när innehållet förändras
+  useEffect(() => {
+    if (!embedded) return;
+    const send = () => {
+      const h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight
+      );
+      // Obs: begränsa origin i produktion om du vill
+      window.parent?.postMessage({ type: "lorbit:height", value: h }, "*");
+    };
+
+    // reagera på layoutförändringar
+    const ro = new ResizeObserver(send);
+    ro.observe(document.body);
+
+    // skicka initial höjd
+    send();
+
+    return () => ro.disconnect();
+  }, [embedded]);
+
   return (
-    <main style={{ padding: 24, maxWidth: 1200, margin: "0 auto" }}>
+    <main
+      style={{
+        padding: embedded ? 0 : 24,
+        maxWidth: embedded ? "none" : 1200,
+        margin: embedded ? "0" : "0 auto",
+        background: "transparent",
+      }}
+    >
       <SellCarForm />
     </main>
   );
