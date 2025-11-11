@@ -1067,6 +1067,7 @@ function Field({
   placeholder,
   type = "text",
   required = false,
+  ...inputProps
 }: {
   label: string;
   value: string | number;
@@ -1074,9 +1075,9 @@ function Field({
   placeholder?: string;
   type?: string;
   required?: boolean;
-}) {
+} & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div className="field">
+    <div className="field" title={typeof inputProps.title === "string" ? inputProps.title : undefined}>
       <label className="floating">{label}</label>
       <input
         className="input"
@@ -1085,6 +1086,7 @@ function Field({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
+        {...inputProps}  // ← här åker t.ex. title och aria-invalid in på inputen
       />
     </div>
   );
