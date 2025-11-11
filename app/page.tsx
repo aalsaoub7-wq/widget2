@@ -232,6 +232,7 @@ function SellCarForm() {
     deduction: number;
     final: number;
   } | null>(null);
+  const SHOW_INLINE_VALUATION = false; // stäng av rutan i formuläret
 
   const sek = (n: number) =>
     new Intl.NumberFormat("sv-SE").format(Math.round(n));
@@ -319,10 +320,11 @@ function SellCarForm() {
           deduction: v.deduction ?? 0,
           final: v.final,
         });
+        if (SHOW_INLINE_VALUATION) setValuationVisible(true);
         setValuationVisible(true);
       } else {
         setValuation(null);
-        setValuationVisible(false);
+        if (SHOW_INLINE_VALUATION) setValuationVisible(false);
       }
     } catch (e: any) {
       setValuation(null);
@@ -981,7 +983,7 @@ function SellCarForm() {
 
             <div className="summary-bg" />
 
-            {valuationVisible && (
+            {SHOW_INLINE_VALUATION && valuationVisible && (
               <div className="mt-3 p-3 rounded-[14px] border border-white/12 bg-white/5">
                 <div className="font-semibold mb-1">Uppskattat värde</div>
 
