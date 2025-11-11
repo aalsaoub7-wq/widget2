@@ -6,6 +6,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";           // ← behövs för <Image> i tumnaglarna
 import { motion } from "framer-motion";   // ← används i form/overlay
 
+type Photo = { file: File; url: string };
+
 const formatSE = new Intl.NumberFormat("sv-SE");
 const fmt = (v: string | number) =>
   formatSE.format(Number(String(v ?? "").replace(/\D/g, "")));
