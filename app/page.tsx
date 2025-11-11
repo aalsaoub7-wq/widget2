@@ -442,10 +442,10 @@ function SellCarForm() {
     }
     setErrors({});
     setErrorSummary("");
-    setStep((s) => Math.min(2, (s + 1) as 0 | 1 | 2));
+    setStep((s) => (Math.min(2, s + 1) as 0 | 1 | 2));
   };
 
-  const prev = () => setStep((s) => Math.max(0, (s - 1) as 0 | 1 | 2));
+  const prev = () => setStep((s) => (Math.max(0, s - 1) as 0 | 1 | 2));
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
